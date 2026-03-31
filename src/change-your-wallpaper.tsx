@@ -49,17 +49,30 @@ function traverseDirectory(directoryPath: string) {
             traverseDirectory(filePath); // recursively call the function for subdirectories
         } else {
             const preview: Image = {source: filePath, fallback: "https://placehold.co/600x400?text=Wallpaper"}
+            const type:string = getImageType(file);
             const wallpaper: Wallpaper = {
                 image: preview,
                 filename: file,
                 path: filePath,
-                type: file,
+                type: type,
                 resolution: "null"
             };
 
             wallpapers_info.push(wallpaper)
         }
     });
+}
+
+// TODO: Needs optimizing by starting at the final of the file instead of the beggining
+function getImageType(filename: string) {
+    const regex: RegExp = RegExp("^\\.[^.]+$");
+    for (let i: number = 0; i < filename.length; i++) {
+        if (filename.charAt(i) == ".") {
+            let possibleResult:string = filename.slice(i, filename.length)
+            if (possibleResult.match(regex)) return possibleResult.toUpperCase();
+        }
+    }
+    return filename
 }
 
 traverseDirectory(path);
