@@ -100,37 +100,26 @@ export default function ListDetail() {
                         actions={
                             <ActionPanel>
                                 <Action.RunInTerminal
-                                    title="Set Wallpaper"
+                                    title="Set wallpaper"
                                     args={["noctalia-shell", "ipc", "call", "wallpaper", "set", wallpaper.path, display]}
                                     options={{hold: false}}
                                     icon={Icon.Image}
                                 />
+                                <Action.Open
+                                    title = "View wallpaper"
+                                    target = {wallpaper.path}
+                                    icon = {Icon.Eye}
+                                />
+                                <Action.ShowInFinder
+                                    title = "Open in file explorer"
+                                    path={wallpaper.path}
+                                    icon = {Icon.Folder}
+                                />
                                 <Action.CopyToClipboard
-                                    title="Copy emoji"
-                                    content={wallpaper.filename}
+                                    title="Copy wallpaper path"
+                                    content={wallpaper.path}
+                                    icon={Icon.Folder}
                                 />
-                                <Action
-                                    title="Custom action"
-                                    icon={Icon.Cog}
-                                    onAction={() =>
-                                        showToast({title: "Hello from custom action"})
-                                    }
-                                />
-
-                                {(
-                                    [
-                                        "arrowUp",
-                                        "arrowDown",
-                                        "arrowLeft",
-                                        "arrowRight",
-                                    ] as KeyEquivalent[]
-                                ).map((arrow) => (
-                                    <Action
-                                        title="Up"
-                                        shortcut={{key: arrow, modifiers: ["shift"]}}
-                                        onAction={() => showToast(Toast.Style.Success, arrow)}
-                                    />
-                                ))}
                             </ActionPanel>
                         }
                     />
