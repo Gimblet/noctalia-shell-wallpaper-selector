@@ -4,15 +4,13 @@ import {
     Color,
     getPreferenceValues,
     Icon,
-    KeyEquivalent,
+    Image,
     List,
-    showToast,
-    Toast,
 } from "@vicinae/api";
 import fs from 'fs';
 
 type Wallpaper = {
-    image: any;
+    image: Image;
     filename: string;
     path: string;
     type: string;
@@ -47,8 +45,9 @@ function traverseDirectory(directoryPath: string) {
         if (stats.isDirectory()) {
             traverseDirectory(filePath); // recursively call the function for subdirectories
         } else {
+            const preview: Image = {source: filePath, fallback: "https://placehold.co/600x400?text=Wallpaper"}
             const wallpaper: Wallpaper = {
-                image: null,
+                image: preview,
                 filename: file,
                 path: filePath,
                 type: file,
@@ -73,7 +72,7 @@ export default function ListDetail() {
                         icon={wallpaper.image}
                         detail={
                             <List.Item.Detail
-                                markdown={wallpaper.filename}
+                                markdown={`![${wallpaper.filename}](${wallpaper.path})`}
                                 metadata={
                                     <List.Item.Detail.Metadata>
                                         <List.Item.Detail.Metadata.Label
@@ -106,14 +105,14 @@ export default function ListDetail() {
                                     icon={Icon.Image}
                                 />
                                 <Action.Open
-                                    title = "View wallpaper"
-                                    target = {wallpaper.path}
-                                    icon = {Icon.Eye}
+                                    title="View wallpaper"
+                                    target={wallpaper.path}
+                                    icon={Icon.Eye}
                                 />
                                 <Action.ShowInFinder
-                                    title = "Open in file explorer"
+                                    title="Open in file explorer"
                                     path={wallpaper.path}
-                                    icon = {Icon.Folder}
+                                    icon={Icon.Folder}
                                 />
                                 <Action.CopyToClipboard
                                     title="Copy wallpaper path"
