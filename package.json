@@ -22,7 +22,7 @@
     {
       "name": "wallpaper_directory",
       "title": "Wallpaper directory",
-      "description": "Path to the folder where you store your wallpapers",
+      "description": "Absolute path to the folder where you store your wallpapers.",
       "required": true,
       "type": "textfield"
     },
