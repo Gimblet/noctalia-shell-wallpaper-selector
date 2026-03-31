@@ -6,8 +6,11 @@ import {
     Icon,
     Image,
     List,
+    showToast,
+    Toast,
 } from "@vicinae/api";
 import fs from 'fs';
+import {exec} from 'child_process'
 
 type Wallpaper = {
     image: Image;
@@ -98,10 +101,28 @@ export default function ListDetail() {
                         }
                         actions={
                             <ActionPanel>
-                                <Action.RunInTerminal
+                                <Action
                                     title="Set wallpaper"
-                                    args={["noctalia-shell", "ipc", "call", "wallpaper", "set", wallpaper.path, display]}
-                                    options={{hold: false}}
+                                    onAction={async () => {
+                                        await showToast({
+                                            style: Toast.Style.Animated,
+                                            title: "Setting wallpaper...",
+                                        });
+                                        exec(`noctalia-shell ipc call wallpaper set "${wallpaper.path}" "${display}"`, async (error) => {
+                                            if (error) {
+                                                await showToast({
+                                                    style: Toast.Style.Failure,
+                                                    title: "Failed to set wallpaper",
+                                                    message: error.message,
+                                                });
+                                            } else {
+                                                await showToast({
+                                                    style: Toast.Style.Success,
+                                                    title: "Wallpaper set",
+                                                });
+                                            }
+                                        });
+                                    }}
                                     icon={Icon.Image}
                                 />
                                 <Action.Open

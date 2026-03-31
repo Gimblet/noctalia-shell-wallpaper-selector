@@ -29,7 +29,7 @@
     {
       "name": "display_name",
       "title": "Your display name",
-      "description": "Set your display name as declared in your Window Manager, this monitor will have the wallpaper change, currently only one monitor is supported.\nFor example: In Hyprland run hyprctl monitors and you should see something like Monitor DP-1.\nTherefore you would set DP-1.",
+      "description": "Set your display name as declared in your Window Manager, this monitor will have the wallpaper changed, currently only one monitor is supported.\nFor example: In Hyprland run hyprctl monitors and you should see something like Monitor DP-1.\nTherefore you would set DP-1.",
       "required": true,
       "type": "textfield"
     }
