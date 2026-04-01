@@ -12,7 +12,8 @@ with the Noctalia Shell team. This is just a simple extension that I pretty much
 
 In the future I plan to add more features like implementing the random wallpaper IPC call.
 
-Contributions are welcome!!!
+[Demostration](demo.mp4)
+### Contributions are welcome!!!
 
 ## Development
 
