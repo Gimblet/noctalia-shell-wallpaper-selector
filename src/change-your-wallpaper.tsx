@@ -17,7 +17,6 @@ type Wallpaper = {
     filename: string;
     path: string;
     type: string;
-    resolution: string; // Markdown formatted description
 };
 
 interface Preference {
@@ -49,27 +48,23 @@ function traverseDirectory(directoryPath: string) {
             traverseDirectory(filePath); // recursively call the function for subdirectories
         } else {
             const preview: Image = {source: filePath, fallback: "https://placehold.co/600x400?text=Wallpaper"}
-            const type:string = getImageType(file);
+            const type: string = getImageType(file);
             const wallpaper: Wallpaper = {
                 image: preview,
                 filename: file,
                 path: filePath,
                 type: type,
-                resolution: "null"
             };
-
             wallpapers_info.push(wallpaper)
         }
     });
 }
 
-// TODO: Needs optimizing by starting at the final of the file instead of the beggining
 function getImageType(filename: string) {
-    const regex: RegExp = RegExp("^\\.[^.]+$");
-    for (let i: number = 0; i < filename.length; i++) {
+    for (let i: number = filename.length; i > 0; i--) {
         if (filename.charAt(i) == ".") {
-            let possibleResult:string = filename.slice(i, filename.length)
-            if (possibleResult.match(regex)) return possibleResult.toUpperCase();
+            const result = filename.slice((i + 1), filename.length)
+            return result.toUpperCase()
         }
     }
     return filename
@@ -98,16 +93,11 @@ export default function ListDetail() {
                                         />
                                         <List.Item.Detail.Metadata.TagList title="Type">
                                             <List.Item.Detail.Metadata.TagList.Item
-                                                color={Color.Yellow}
+                                                color={Color.PrimaryText}
                                                 text={wallpaper.type}
                                                 icon={Icon.Image}
                                             />
                                         </List.Item.Detail.Metadata.TagList>
-                                        <List.Item.Detail.Metadata.Separator/>
-                                        <List.Item.Detail.Metadata.Label
-                                            title="Resolution"
-                                            text={wallpaper.resolution}
-                                        />
                                     </List.Item.Detail.Metadata>
                                 }
                             />
