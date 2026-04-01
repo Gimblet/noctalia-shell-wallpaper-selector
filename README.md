@@ -12,7 +12,11 @@ with the Noctalia Shell team. This is just a simple extension that I pretty much
 
 In the future I plan to add more features like implementing the random wallpaper IPC call.
 
-### Demo
+### Main GitHub Repository
+
+https://github.com/Gimblet/noctalia-shell-wallpaper-selector
+
+### Demo (Click the image)
 
 [![Demo](https://img.youtube.com/vi/JQVtwBjJWh4/maxresdefault.jpg)](https://youtu.be/JQVtwBjJWh4)
 

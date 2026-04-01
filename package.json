@@ -3,7 +3,10 @@
   "name": "noctalia-shell-wallpaper-selector",
   "title": "Noctalia Shell Wallpaper Selector",
   "description": "Simple extension to quickly change your wallpaper using the Noctalia Shell IPC for interacting with wallpapers.",
-  "categories": [],
+  "categories": [
+    "Media",
+    "System"
+  ],
   "license": "MIT",
   "author": "Gimblet",
   "contributors": [],
