@@ -6,15 +6,17 @@ import {
     Icon,
     Image,
     List,
+    showToast,
+    Toast,
 } from "@vicinae/api";
 import fs from 'fs';
+import {exec} from 'child_process'
 
 type Wallpaper = {
     image: Image;
     filename: string;
     path: string;
     type: string;
-    resolution: string; // Markdown formatted description
 };
 
 interface Preference {
@@ -30,38 +32,62 @@ export const display: string = preferences.display_name;
 export const wallpapers_info: Wallpaper[] = [];
 
 function traverseDirectory(directoryPath: string) {
-    const files = fs.readdirSync(directoryPath);
+    try {
+        const files = fs.readdirSync(directoryPath);
 
-    files.forEach((file) => {
-        let filePath: string;
+        files.forEach((file) => {
+            let filePath: string;
 
-        if (directoryPath.endsWith("/")) {
-            filePath = directoryPath + file;
-        } else {
-            filePath = directoryPath + '/' + file;
+            if (directoryPath.endsWith("/")) {
+                filePath = directoryPath + file;
+            } else {
+                filePath = directoryPath + '/' + file;
+            }
+            const stats = fs.statSync(filePath);
+
+            if (stats.isDirectory()) {
+                traverseDirectory(filePath); // recursively call the function for subdirectories
+            } else {
+                const preview: Image = {source: filePath, fallback: "https://placehold.co/600x400?text=Wallpaper"}
+                const type: string = getImageType(file);
+                const wallpaper: Wallpaper = {
+                    image: preview,
+                    filename: file,
+                    path: filePath,
+                    type: type,
+                };
+                wallpapers_info.push(wallpaper)
+            }
+        });
+    } catch (error) {
+        console.error(`Error reading directory ${directoryPath}:`, error);
+    }
+}
+
+function getImageType(filename: string) {
+    for (let i: number = filename.length; i > 0; i--) {
+        if (filename.charAt(i) == ".") {
+            const result = filename.slice((i + 1), filename.length)
+            return result.toUpperCase()
         }
-        const stats = fs.statSync(filePath);
-
-        if (stats.isDirectory()) {
-            traverseDirectory(filePath); // recursively call the function for subdirectories
-        } else {
-            const preview: Image = {source: filePath, fallback: "https://placehold.co/600x400?text=Wallpaper"}
-            const wallpaper: Wallpaper = {
-                image: preview,
-                filename: file,
-                path: filePath,
-                type: file,
-                resolution: "null"
-            };
-
-            wallpapers_info.push(wallpaper)
-        }
-    });
+    }
+    return filename
 }
 
 traverseDirectory(path);
 
 export default function ListDetail() {
+    if (wallpapers_info.length == 0) {
+        return (
+            <List>
+                <List.EmptyView
+                    title="No wallpapers were found"
+                    description="No wallpapers found in the specified directory. Make sure you have set the correct directory in the extension preferences. Tip: It has to be an absolute path."
+                    icon={Icon.MagnifyingGlass}
+                />
+            </List>
+        );
+    }
     return (
         <List isShowingDetail searchBarPlaceholder={"Select Your Wallpaper..."}>
             <List.Section title={"Wallpapers"}>
@@ -82,26 +108,40 @@ export default function ListDetail() {
                                         />
                                         <List.Item.Detail.Metadata.TagList title="Type">
                                             <List.Item.Detail.Metadata.TagList.Item
-                                                color={Color.Yellow}
+                                                color={Color.PrimaryText}
                                                 text={wallpaper.type}
                                                 icon={Icon.Image}
                                             />
                                         </List.Item.Detail.Metadata.TagList>
-                                        <List.Item.Detail.Metadata.Separator/>
-                                        <List.Item.Detail.Metadata.Label
-                                            title="Resolution"
-                                            text={wallpaper.resolution}
-                                        />
                                     </List.Item.Detail.Metadata>
                                 }
                             />
                         }
                         actions={
                             <ActionPanel>
-                                <Action.RunInTerminal
+                                <Action
                                     title="Set wallpaper"
-                                    args={["noctalia-shell", "ipc", "call", "wallpaper", "set", wallpaper.path, display]}
-                                    options={{hold: false}}
+                                    onAction={async () => {
+                                        await showToast({
+                                            style: Toast.Style.Animated,
+                                            title: "Setting wallpaper...",
+                                        });
+                                        exec(`noctalia-shell ipc call wallpaper set "${wallpaper.path}" "${display}"`, async (error) => {
+                                            if (error) {
+                                                await showToast({
+                                                    style: Toast.Style.Failure,
+                                                    title: "Failed to set wallpaper",
+                                                    message: error.message,
+                                                });
+                                            } else {
+                                                await showToast({
+                                                    style: Toast.Style.Success,
+                                                    title: "Wallpaper set",
+                                                    message: "If nothing happens, double check your display name in the extension preferences.",
+                                                });
+                                            }
+                                        });
+                                    }}
                                     icon={Icon.Image}
                                 />
                                 <Action.Open
