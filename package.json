@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
   "name": "noctalia-shell-wallpaper-selector",
   "title": "Noctalia Shell Wallpaper Selector",
-  "description": "Just a simple extension to quickly change your wallpaper using the recently added Noctalia Shell IPC for interacting with wallpapers.",
+  "description": "Simple extension to quickly change your wallpaper using the Noctalia Shell IPC for interacting with wallpapers.",
   "categories": [],
   "license": "MIT",
   "author": "Gimblet",
@@ -14,7 +14,7 @@
       "name": "change-your-wallpaper",
       "title": "Change your wallpaper",
       "subtitle": "Select a new wallpaper for noctalia shell",
-      "description": "My command uses the recently added Noctalia Shell IPC for interacting with wallpapers in order to change the user's wallpaper",
+      "description": "This command executes the Noctalia Shell IPC in order to change the user's wallpaper",
       "mode": "view"
     }
   ],
