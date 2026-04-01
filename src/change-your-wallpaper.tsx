@@ -32,32 +32,36 @@ export const display: string = preferences.display_name;
 export const wallpapers_info: Wallpaper[] = [];
 
 function traverseDirectory(directoryPath: string) {
-    const files = fs.readdirSync(directoryPath);
+    try {
+        const files = fs.readdirSync(directoryPath);
 
-    files.forEach((file) => {
-        let filePath: string;
+        files.forEach((file) => {
+            let filePath: string;
 
-        if (directoryPath.endsWith("/")) {
-            filePath = directoryPath + file;
-        } else {
-            filePath = directoryPath + '/' + file;
-        }
-        const stats = fs.statSync(filePath);
+            if (directoryPath.endsWith("/")) {
+                filePath = directoryPath + file;
+            } else {
+                filePath = directoryPath + '/' + file;
+            }
+            const stats = fs.statSync(filePath);
 
-        if (stats.isDirectory()) {
-            traverseDirectory(filePath); // recursively call the function for subdirectories
-        } else {
-            const preview: Image = {source: filePath, fallback: "https://placehold.co/600x400?text=Wallpaper"}
-            const type: string = getImageType(file);
-            const wallpaper: Wallpaper = {
-                image: preview,
-                filename: file,
-                path: filePath,
-                type: type,
-            };
-            wallpapers_info.push(wallpaper)
-        }
-    });
+            if (stats.isDirectory()) {
+                traverseDirectory(filePath); // recursively call the function for subdirectories
+            } else {
+                const preview: Image = {source: filePath, fallback: "https://placehold.co/600x400?text=Wallpaper"}
+                const type: string = getImageType(file);
+                const wallpaper: Wallpaper = {
+                    image: preview,
+                    filename: file,
+                    path: filePath,
+                    type: type,
+                };
+                wallpapers_info.push(wallpaper)
+            }
+        });
+    } catch (error) {
+        console.error(`Error reading directory ${directoryPath}:`, error);
+    }
 }
 
 function getImageType(filename: string) {
@@ -73,6 +77,17 @@ function getImageType(filename: string) {
 traverseDirectory(path);
 
 export default function ListDetail() {
+    if (wallpapers_info.length == 0) {
+        return (
+            <List>
+                <List.EmptyView
+                    title="No wallpapers were found"
+                    description="No wallpapers found in the specified directory. Make sure you have set the correct directory in the extension preferences. Tip: It has to be an absolute path."
+                    icon={Icon.MagnifyingGlass}
+                />
+            </List>
+        );
+    }
     return (
         <List isShowingDetail searchBarPlaceholder={"Select Your Wallpaper..."}>
             <List.Section title={"Wallpapers"}>
@@ -122,6 +137,7 @@ export default function ListDetail() {
                                                 await showToast({
                                                     style: Toast.Style.Success,
                                                     title: "Wallpaper set",
+                                                    message: "If nothing happens, double check your display name in the extension preferences.",
                                                 });
                                             }
                                         });
