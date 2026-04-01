@@ -13,7 +13,7 @@
     {
       "name": "change-your-wallpaper",
       "title": "Change your wallpaper",
-      "subtitle": "Select a new wallpaper for noctalia shell",kk
+      "subtitle": "Select a new wallpaper for noctalia shell",
       "description": "This command executes the Noctalia Shell IPC in order to change the user's wallpaper",
       "mode": "view"
     }
