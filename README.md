@@ -12,10 +12,13 @@ with the Noctalia Shell team. This is just a simple extension that I pretty much
 
 In the future I plan to add more features like implementing the random wallpaper IPC call.
 
-[Demostration](demo.mp4)
+### Demo
+
+[![Demo](https://img.youtube.com/vi/JQVtwBjJWh4/maxresdefault.jpg)](https://youtu.be/JQVtwBjJWh4)
+
 ### Contributions are welcome!!!
 
-## Development
+#### Development
 
 ```bash
 npm install
